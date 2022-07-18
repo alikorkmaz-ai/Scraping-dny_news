@@ -18,7 +18,7 @@ class Finder:
 
 finder = Finder()  
 
-line = "https://www.dunya.com/sirketler/"
+line = "https://www.abc.com/sirketler/"
 name = line.split('com')[-1].replace('/', ' ')
 
 for i in range(1,1389):
