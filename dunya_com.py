@@ -4,13 +4,14 @@ import time
 import random
 import json
 
+
 class Finder:
     
     def __init__(self):
         self.my_dict = {}
     
     def saveToFile(self, dict1):
-        with open(f'dunya_2.json', encoding="utf-8", mode='a') as file:
+        with open(f'economy.json', encoding="utf-8", mode='a') as file:
             s = json.dumps(dict1, sort_keys = False, ensure_ascii=False) + '\n'
             file.write(s)
     
@@ -21,7 +22,7 @@ class Finder:
         soup = BeautifulSoup(html, 'html.parser')
         news = soup.find_all("a", {"class": ['box']})    
         for new in news:
-            with open('urls.text', 'a') as file:
+            with open(f'urls.text', 'a') as file:
                 file.write(new['href']+'\n')
 
     def randomChoser(self, i, a):
@@ -74,22 +75,12 @@ class Finder:
         page = requests.get(url)
         html = page.text
         soup = BeautifulSoup(html, 'html.parser')
-        try:
-            pub_date = soup.find_all("div", {"class": ['item-date']})[0].time['datetime']
-            update = soup.find_all("div", {"class": ['item-date']})[1].time['datetime']
-            title = soup.find("h1").text
-            abstract = soup.find("h2").text
-            content = soup.find("div", {"class": ['content-text']}).text
-            html = soup.find("article")
-            
-        except:
-            pub_date = soup.find_all("div", {"class": ['info pt-0']})[0].time['datetime']
-            update = pub_date
-            title = soup.find("h1").text
-            abstract = ''
-            content = soup.find("div", {"class": ['content-text']}).text
-            html = soup.find("article")
-            
+        pub_date = soup.find_all("div", {"class": ['item-date']})[0].time['datetime'][:10]
+        update = soup.find_all("div", {"class": ['item-date']})[1].time['datetime'][:10]
+        title = soup.find("h1").text
+        abstract = soup.find("h2").text
+        content = soup.find("div", {"class": ['content-text']}).text
+        html = soup.find("article")
         self.my_dict['published_date'] = pub_date
         self.my_dict['update'] = pub_date
         self.my_dict['category'] = category
@@ -98,36 +89,29 @@ class Finder:
         self.my_dict['abstract'] = abstract
         self.my_dict['content'] = content
         self.my_dict['html'] = str(html)
-        
+            
         self.saveToFile(self.my_dict)
         
 finder = Finder()  
 
-'''line = "https://www.dunya.com/ekonomi/"
-name = line.split('com')[-1].replace('/', ' ')'''
+categories = [dunya, economy, finans, finansborsa, gundem, sektorler, sirketler]
+
+for category in categories:
+    line = f"https://www.dunya.com/{category}/"
+    name = line.split('com')[-1].replace('/', ' ')
+    for i in range(1,5037):
+    url = line + str(i)
+    finder.getLinks(url)
+    print(f'{i}: taken!')
+    time.sleep(2)
 
 with open('urls.text', 'r') as f:
     lines = f.readlines()
 i = 1
 for line in lines:
-    li = line.split('.com')[0]
-    lii = line.split('-galeri/')[0]
-    if li == 'https://www.dunya':
-        if lii == 'https://www.dunya.com/foto':
-            print(f'{i}: skiped!')
-        else:
-            finder.getNews(line)
-            print(f'{i}: taken!')
-            time.sleep(2)
-    
-    else:
-        print(f'{i}: skiped!')
-    i = i + 1
-
-'''for i in range(2917,5037):
-    url = line + str(i)
-    finder.getLinks(url)
+    finder.getNews(line)
     print(f'{i}: taken!')
-    time.sleep(2)'''
+    time.sleep(2)
+    i = i + 1
           
 print('Process finished!')
