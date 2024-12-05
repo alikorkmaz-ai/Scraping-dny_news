@@ -39,7 +39,7 @@ class Finder:
         url_list = self.randomChoser(i,a)
         for line in url_list:
             url = line.strip()
-            cate = url.replace('https://www.dunya.com/','').split("/")[:-1]
+            cate = url.replace('https://www.dny.com/','').split("/")[:-1]
             category = str()
             for elem in cate:
                 category = category + '_' + elem
@@ -67,7 +67,7 @@ class Finder:
     def getNews(self, a):
         '''Using this function one can download all news!'''
         url = line.strip()
-        cate = url.replace('https://www.dunya.com/','').split("/")[:-1]
+        cate = url.replace('https://www.dny.com/','').split("/")[:-1]
         category = str()
         for elem in cate:
             category = category + '_' + elem
@@ -97,7 +97,7 @@ finder = Finder()
 categories = [dunya, economy, finans, finansborsa, gundem, sektorler, sirketler]
 
 for category in categories:
-    line = f"https://www.dunya.com/{category}/"
+    line = f"https://www.dny.com/{category}/"
     name = line.split('com')[-1].replace('/', ' ')
     for i in range(1,5037):
     url = line + str(i)
